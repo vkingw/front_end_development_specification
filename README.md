@@ -1,9 +1,9 @@
-#前端技术规范（草稿）
-##0. 命名规则
+# 前端技术规范（草稿）
+## 0. 命名规则
 使用英文名，避免拼音以及简写。
 英文可以使用有道、Google等翻译软件。
 
-###(1) 避免单字母命名。命名应具备描述性。
+### (1) 避免单字母命名。命名应具备描述性。
 
 ```
 // bad
@@ -17,7 +17,7 @@ function query() {
 }
 ```
 
-###(2) 使用驼峰式命名对象、函数和实例。
+### (2) 使用驼峰式命名对象、函数和实例。
 
 ```
 // bad
@@ -30,7 +30,7 @@ const thisIsMyObject = {};
 function thisIsMyFunction() {}
 ```
 
-###(3) 使用帕斯卡式命名构造函数或类。
+### (3) 使用帕斯卡式命名构造函数或类。
 
 ```
 // bad
@@ -53,7 +53,7 @@ const good = new User({
   name: 'yup',
 });
 ```
-###(4) 使用下划线 _ 开头命名私有属性。
+### (4) 使用下划线 _ 开头命名私有属性。
 
 ```
 // bad
@@ -64,7 +64,7 @@ this.firstName_ = 'Panda';
 this._firstName = 'Panda';
 ```
 
-###(5) 别保存 this 的引用。使用箭头函数或 Function#bind。
+### (5) 别保存 this 的引用。使用箭头函数或 Function#bind。
 ```
 // bad
 function foo() {
@@ -90,7 +90,7 @@ function foo() {
 }
 ```
 
-###(6) 如果你的文件只输出一个类，那你的文件名必须和类名完全保持一致。
+### (6) 如果你的文件只输出一个类，那你的文件名必须和类名完全保持一致。
 
 ```
 // file contents
@@ -110,7 +110,7 @@ import CheckBox from './check_box';
 import CheckBox from './CheckBox';
 ```
 
-###(7) 当你导出默认的函数时使用驼峰式命名。你的文件名必须和函数名完全保持一致。
+### (7) 当你导出默认的函数时使用驼峰式命名。你的文件名必须和函数名完全保持一致。
 
 ```
 function makeStyleGuide() {
@@ -120,7 +120,7 @@ export default makeStyleGuide;
 ```
 
 
-##1. 使用ECMAScript 2015规范声明变量
+## 1. 使用ECMAScript 2015规范声明变量
 
 ```
 //不允许
@@ -131,7 +131,7 @@ let a =10；
 const b=10; 
 ```
 
-##2. console输出
+## 2. console输出
  **使用 window.console**,现阶段前端代码主要运行在浏览器中，所以统一使用window.console,否则静态检查不会通过。
  
 ```
@@ -142,7 +142,7 @@ console.log('error');
 window.error('list is null');
 ```
  
-##3. 字符串处理
+## 3. 字符串处理
 对于拼接的字符串使用ECMAScript 2015 的 **模版字符串**。
 
 对于带参数的拼接也必须使用 **模版字符串**。
@@ -156,7 +156,7 @@ window.error('list is null');
 
 ```
 
-##4. 箭头函数
+## 4. 箭头函数
 对于回调函数推荐用箭头函数。
 使用箭头函数可以使你的代码更加简洁。
 
@@ -177,7 +177,7 @@ const f = () => 5;
 
 ```
 
-##5. 图片引用
+## 5. 图片引用
 使用import引入图片，避免使用require
 
 ```
@@ -191,7 +191,7 @@ import log from 'logo';
 
 ```
 
-##6. 开发环境和产品代码控制
+## 6. 开发环境和产品代码控制
 使用process.env.NODE_ENV来区分
 
 ```
@@ -204,7 +204,7 @@ if(process.env.NODE_ENV === 'production'){
 
 ```
 
-##7. router使用常量
+## 7. router使用常量
 对于router中的path，Link中的to等，只有涉及url path的地方统一使用常量，在解决非根部署时会很方便。
 
 ```
@@ -228,18 +228,117 @@ routerRedux.push(ROUTE_PATH.WEB_HOME})
 
 ```
 
-##8. 5行代码原则
+## 8. 5行代码原则
 5行代码原则介绍，更准确说是5句。非强制要求，组内要求function 尽量不要超过10句，最长要求不能超过对于复杂业务尽量保持在一屏幕范围内可观看，总体不超过***30行***。
 
 通过重构，提取function等使每个function功能单一，内容简介，增加可阅读性。
 
-##9. 保持render整洁
+## 9. 保持render整洁
 在组件中render不要写多行的计算和逻辑代码，对于有计算要求的或者有业务逻辑处理的，提取为function，render尽量保持只有JSX。
 
 ***对于render中超过5行的业务逻辑代码或者计算必须要重构提取为function***
 
+```
+//bad
+render() {
+    const {intl, dispatch,quit} = this.props.state;
 
-##10.样式的使用
+    const columns = [
+      {
+        title: intl.formatMessage({id:'onJob.name'}),
+        dataIndex: 'name',
+        key: 'name',
+      },{
+        title: intl.formatMessage({id:'onJob.position'}),
+        dataIndex: 'position',
+        key: 'position',
+      }, 
+      }];
+      
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        if(selectedRows.length !== 0){
+          let userId = ''
+          selectedRows.map((e)=> {
+            userId = userId+e.id+';'
+          })
+          dispatch({
+            type:'quit/setState',
+            payload:{
+              userIds:userId
+            }
+          })
+        }else {
+          dispatch({
+            type:'quit/setState',
+            payload:{
+              userIds:''
+            }
+          })
+        }
+
+      },
+      getCheckboxProps: record => ({
+        disabled: record.name === 'Disabled User', // Column configuration not to be checked
+        name: record.name,
+      }),
+    };
+    return (...)
+   }
+   
+   
+    
+    //good
+     const columns =()=> [
+      {
+        title: intl.formatMessage({id:'onJob.name'}),
+        dataIndex: 'name',
+        key: 'name',
+      },{
+        title: intl.formatMessage({id:'onJob.position'}),
+        dataIndex: 'position',
+        key: 'position',
+      }, 
+      }];
+      
+      const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        if(selectedRows.length !== 0){
+          let userId = ''
+          selectedRows.map((e)=> {
+            userId = userId+e.id+';'
+          })
+          dispatch({
+            type:'quit/setState',
+            payload:{
+              userIds:userId
+            }
+          })
+        }else {
+          dispatch({
+            type:'quit/setState',
+            payload:{
+              userIds:''
+            }
+          })
+        }
+
+      },
+      getCheckboxProps: record => ({
+        disabled: record.name === 'Disabled User', // Column configuration not to be checked
+        name: record.name,
+      }),
+    };
+
+
+    render() {
+    const {intl, dispatch,quit} = this.props.state;
+        return (...columns, rowSelection)
+   }
+```
+
+
+## 10.样式的使用
 统一使用styles
 
 ```
@@ -265,7 +364,7 @@ routerRedux.push(ROUTE_PATH.WEB_HOME})
 
 ***每个组件使用独立的样式，禁止整个项目使用只一个。***
 
-##11. 打包配置
+## 11. 打包配置
 以下参数为必选
 
 ```
@@ -273,13 +372,13 @@ routerRedux.push(ROUTE_PATH.WEB_HOME})
  hash: true,
 ```
 
-##12. 代码静态检查
+## 12. 代码静态检查
 Eslint为项目必备的静态检查工具，Stylelint为样式检查工具。
 
 ***Eslint推荐使用fbjs和eslint-config-airbnb。***
 ***Stylelint使用默认配置***
 
-##13. 格式化代码
+## 13. 格式化代码
 prettier为项目必备格式化工具，现有配置如下：
 
 ```
@@ -289,7 +388,7 @@ trailingComma: es5
 
 ```
 
-##14. 包的安全
+## 14. 包的安全
 通过 ***npm audit*** 来检查包依赖的安全。
 
 漏洞级别以及修复要求。
@@ -300,4 +399,3 @@ trailingComma: es5
 |Moderate       | 可以不修复。
 |High           | 必须修复。
 |Critical       | 必须修复。
-
