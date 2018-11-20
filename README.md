@@ -393,6 +393,9 @@ trailingComma: es5
 
 漏洞级别以及修复要求。
 
+dependencies 里面的需要遵守下面原则。
+devDependencies 可以暂时忽略。
+
 |级别            | 修复要求
 |---------------|----------------
 |Low            | 可以不修复。
